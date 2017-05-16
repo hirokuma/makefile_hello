@@ -1,9 +1,10 @@
 OUTPUT_FILENAME := tst
 OBJECT_DIRECTORY = _build
-PRJ_PATH = src/
+PRJ_PATH = src
 OUTPUT_BINARY_DIRECTORY = .
 
-C_SOURCE_FILES += $(PRJ_PATH)hello.c
+C_SOURCE_FILES += $(PRJ_PATH)/hello.c
+C_SOURCE_FILES += $(PRJ_PATH)/hello2/hello2.c
 INC_PATHS += -Iinclude
 
 ##################################################################
@@ -53,6 +54,10 @@ clean:
 	$(RM) $(OBJECT_DIRECTORY) $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME) .Depend
 
 .Depend:
-	$(foreach SRC,$(C_SOURCE_FILES),$(CC) $(CFLAGS) -MM -MT $(SRC:$(PRJ_PATH)%.c=$(OBJECT_DIRECTORY)/%.o) $(SRC) >> .Depend;)
+	$(foreach SRC,$(C_SOURCE_FILES),$(CC) $(CFLAGS) -MM -MT $(OBJECT_DIRECTORY)/$(notdir $(SRC:%.c=%.o)) $(SRC) >> .Depend;)
+
+depend:
+	$(RM) .Depend
+	make .Depend
 
 -include .Depend
